@@ -1,0 +1,14 @@
+# 把 CF_PUBLIC_URL 换成你的域名，前面用 nginx 或 Caddy 做 HTTPS（示例见 deploy/nginx.conf）
+services:
+  cyber-favorites:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4170:4170"
+    environment:
+      CF_PUBLIC_URL: https://fav.example.com
+      CF_MAX_UPLOAD_MB: "50"
+    volumes:
+      - cf-data:/data
+volumes:
+  cf-data:

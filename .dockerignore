@@ -1,0 +1,8 @@
+.git
+.claude
+data
+test
+deploy
+node_modules
+*.tmp
+launch.vbs

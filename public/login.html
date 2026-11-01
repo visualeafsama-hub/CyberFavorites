@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>登录 · CyberFavorites</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+<main class="login">
+  <div class="halo big" aria-hidden="true">
+    <svg viewBox="0 0 46 46">
+      <circle class="ring" cx="23" cy="23" r="17"/>
+      <circle class="ring2" cx="23" cy="23" r="21"/>
+    </svg>
+    <b>C</b>
+  </div>
+  <div class="kicker">LOGIN · 登录</div>
+  <h1>CyberFavorites</h1>
+  <p id="msg">这个收藏夹需要登录。</p>
+  <form id="login-form" autocomplete="off">
+    <input id="code" placeholder="粘贴登录链接或登录码" required autofocus>
+    <button type="submit">登录</button>
+  </form>
+  <details>
+    <summary>登录码从哪里来？</summary>
+    <ul>
+      <li><b>已经有设备登录了</b>：在那台设备上打开 设置 → 设备 → 添加设备，扫二维码，或者把链接复制过来。</li>
+      <li><b>第一次使用</b>：服务启动时会在日志里打印一个登录链接（<code>journalctl -u cyber-favorites</code> 或 <code>docker logs</code>）。</li>
+      <li><b>所有设备都退出了</b>：在服务器上运行 <code>node server.js --login-link</code>，会生成一个新的。</li>
+    </ul>
+  </details>
+</main>
+<script src="login.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CyberFavorites · 赛博收藏夹</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<style id="theme-vars"></style>
+<style id="custom-css"></style>
+</head>
+<body>
+<svg id="rose" viewBox="-550 -550 1100 1100" aria-hidden="true"></svg>
+<div id="rays" aria-hidden="true"></div>
+
+<header>
+  <div class="halo" aria-hidden="true">
+    <svg viewBox="0 0 46 46">
+      <defs><radialGradient id="haloGlow"><stop offset="0" stop-color="var(--c-accentPale)"/>
+        <stop offset="1" stop-color="#ffffff00"/></radialGradient></defs>
+      <circle class="glow" cx="23" cy="23" r="23"/>
+      <circle class="ring" cx="23" cy="23" r="17"/>
+      <circle class="ring2" cx="23" cy="23" r="21"/>
+    </svg>
+    <b>C</b>
+  </div>
+  <div class="brand"><strong id="title">CyberFavorites</strong><small id="subtitle"></small></div>
+  <div class="sep"></div>
+  <form id="add" autocomplete="off">
+    <input id="url" placeholder="粘贴链接、文字、截图或文件" title="链接和文字回车收藏；截图、图片、文件直接 Ctrl+V 或拖进页面" required>
+    <button type="button" id="pick-file" class="file-btn" title="选择文件上传">＋</button>
+    <input id="file-input" type="file" multiple hidden>
+    <select id="add-group" title="收藏到哪个分组"></select>
+    <button type="submit">收藏</button>
+  </form>
+  <div id="counter"></div>
+</header>
+
+<main>
+  <aside>
+    <section>
+      <h4>分组</h4>
+      <nav id="groups"></nav>
+    </section>
+    <section>
+      <h4>类型</h4>
+      <nav id="types"></nav>
+    </section>
+    <section>
+      <h4>标签</h4>
+      <nav id="tags"></nav>
+    </section>
+    <section class="foot">
+      <button id="settings-btn" class="ghost">设置</button>
+      <a class="ghost" href="/api" target="_blank">API</a>
+    </section>
+  </aside>
+
+  <section id="content">
+    <div id="toolbar">
+      <input id="q" type="search" placeholder="搜索标题、标签、分组、备注、topics…">
+      <select id="sort">
+        <option value="manual">自定义顺序</option>
+        <option value="new">最新收藏</option>
+        <option value="old">最早收藏</option>
+        <option value="stars">Star 最多</option>
+        <option value="title">按标题</option>
+      </select>
+      <div id="layout-switch">
+        <button data-layout="grid" title="卡片">▦</button>
+        <button data-layout="list" title="列表">☰</button>
+        <button data-layout="compact" title="紧凑">≡</button>
+      </div>
+    </div>
+    <p id="drag-tip" class="hint" hidden></p>
+    <div id="items"></div>
+    <div id="empty" hidden>
+      <div class="kicker">EMPTY · 空空如也</div>
+      <h2>还没有收藏</h2>
+      <p></p>
+    </div>
+  </section>
+</main>
+
+<dialog id="editor">
+  <form method="dialog" id="edit-form">
+    <div class="kicker">EDIT · 编辑收藏</div>
+    <label>标题<input name="title"></label>
+    <label id="f-url">链接<input name="url" type="url"></label>
+    <div class="cols">
+      <label>分组<select name="groupId"></select></label>
+      <label id="f-type">类型<select name="type"></select></label>
+    </div>
+    <label id="f-text" hidden>内容<textarea name="text" rows="8"></textarea></label>
+    <label>标签 <small>用空格或逗号分隔</small><input name="tags"></label>
+    <label>描述<textarea name="description" rows="3"></textarea></label>
+    <label>备注 <small>以后为什么会用到它</small><textarea name="note" rows="3"></textarea></label>
+    <div class="row">
+      <button value="delete" class="danger ghost">删除</button>
+      <button value="refresh" class="ghost" id="edit-refresh">重新抓取</button>
+      <span class="grow"></span>
+      <button value="cancel" class="ghost">取消</button>
+      <button value="save">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="name-dlg">
+  <form method="dialog">
+    <div class="kicker" id="name-kicker">GROUP · 分组</div>
+    <label><span id="name-label">分组名</span><input name="name" maxlength="40" required></label>
+    <div class="row">
+      <span class="grow"></span>
+      <button value="cancel" class="ghost" formnovalidate>取消</button>
+      <button value="ok">确定</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="settings">
+  <form method="dialog">
+    <div class="kicker">SETTINGS · 设置</div>
+    <h5>主题</h5>
+    <div id="presets"></div>
+    <div class="row tight">
+      <button type="button" id="theme-undo" class="ghost">撤销</button>
+      <button type="button" id="theme-reset" class="ghost">恢复默认</button>
+    </div>
+    <p class="hint">AI 可以通过 <code>PATCH /api/theme</code> 修改配色、布局、字体，或注入自定义 CSS。改坏了点“撤销”。</p>
+
+    <div id="system-wrap">
+      <h5>启动</h5>
+      <div id="system"></div>
+    </div>
+
+    <div id="devices-wrap" hidden>
+      <h5>设备</h5>
+      <div class="row tight">
+        <button type="button" id="add-device" class="ghost">＋ 添加设备</button>
+        <span class="grow"></span>
+        <button type="button" id="logout" class="ghost danger">退出这台设备</button>
+      </div>
+      <div id="device-link" hidden>
+        <div id="device-qr"></div>
+        <div class="device-info">
+          <p class="hint" style="margin-top:0">用新设备扫码，或者把链接复制过去打开。<b>10 分钟内有效，只能用一次。</b></p>
+          <input id="device-url" readonly>
+          <div class="row tight"><button type="button" id="copy-device" class="ghost sm">复制链接</button></div>
+        </div>
+      </div>
+      <ul id="sessions" class="plain"></ul>
+
+      <h5>API 令牌 <small>给 AI / 脚本用</small></h5>
+      <div class="row tight"><button type="button" id="add-token" class="ghost">＋ 生成令牌</button></div>
+      <div id="new-token" hidden>
+        <p class="hint">令牌只显示这一次，请马上复制保存：</p>
+        <input id="token-value" readonly>
+      </div>
+      <ul id="tokens" class="plain"></ul>
+    </div>
+
+    <div class="row">
+      <span class="grow"></span>
+      <button value="close">关闭</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="viewer">
+  <form method="dialog">
+    <div class="viewer-head">
+      <div class="kicker" id="viewer-kind">VIEW</div>
+      <span class="grow"></span>
+      <a id="viewer-download" class="ghost sm" download>下载</a>
+      <button type="button" id="viewer-copy" class="ghost sm">复制</button>
+      <button value="close" class="ghost sm">关闭</button>
+    </div>
+    <h3 id="viewer-title"></h3>
+    <div id="viewer-body"></div>
+  </form>
+</dialog>
+
+<div id="drop-mask" hidden><div>松开鼠标，收藏这些文件</div></div>
+<div id="toast"></div>
+<script src="app.js" type="module"></script>
+</body>
+</html>

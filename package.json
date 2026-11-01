@@ -1,0 +1,41 @@
+{
+  "name": "cyber-favorites",
+  "version": "0.1.0",
+  "description": "赛博收藏夹：粘贴即收藏链接、截图、图片、文件和文字片段，本机或服务器部署，AI 通过 HTTP API 帮你整理、查找、换主题",
+  "type": "module",
+  "bin": {
+    "cyber-favorites": "server.js"
+  },
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node test/run.mjs"
+  },
+  "files": [
+    "server.js",
+    "launch.vbs",
+    "lib",
+    "public",
+    "skill",
+    "deploy",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "bookmarks",
+    "mcp",
+    "agent-skills",
+    "claude-code",
+    "self-hosted"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/visualeafsama-hub/CyberFavorites.git"
+  },
+  "homepage": "https://github.com/visualeafsama-hub/CyberFavorites"
+}
