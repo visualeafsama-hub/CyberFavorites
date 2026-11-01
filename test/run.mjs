@@ -2,7 +2,7 @@
 // 不访问外网，链接收藏用的是本机地址（本机模式允许、服务器模式应当拒绝抓取）。
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
-import { ok, results, startServer, request, makeZip, TINY_PNG, ROOT } from './helpers.mjs';
+import { ok, results, startServer, request, makeZip, TINY_PNG, ROOT, baseEnv } from './helpers.mjs';
 import { isPrivateAddress } from '../lib/net.js';
 import { qrMatrix } from '../public/qr.js';
 import { extractText } from '../lib/extract.js';
@@ -82,7 +82,7 @@ try {
   ok((await S('/')).headers.location === '/login', '未登录打开首页 → 跳登录页');
   ok((await S('/app.js')).status === 303, '未登录拿不到主程序');
 
-  const cli = execFileSync(process.execPath, [join(ROOT, 'server.js'), '--login-link'], { env: { ...process.env, ...srv.env }, encoding: 'utf8' });
+  const cli = execFileSync(process.execPath, [join(ROOT, 'server.js'), '--login-link'], { env: { ...baseEnv(), ...srv.env }, encoding: 'utf8' });
   const t = cli.match(/login\?t=(cfl_[\w-]+)/)[1];
   const login = await S(`/login?t=${t}`, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0) Chrome/130' } });
   const c = cookieOf(login);

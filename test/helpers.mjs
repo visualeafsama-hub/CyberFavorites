@@ -9,6 +9,9 @@ import { crc32 } from 'node:zlib';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
+// 去掉外面带进来的 CF_* 变量（比如给 AI 配的 CF_URL / CF_TOKEN），测试只用自己设的配置
+export const baseEnv = () => Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith('CF_')));
+
 let pass = 0, fail = 0;
 export function ok(cond, msg, extra = '') {
   cond ? pass++ : fail++;
@@ -20,7 +23,7 @@ export const results = () => ({ pass, fail });
 export async function startServer({ port, env = {} }) {
   const dir = mkdtempSync(join(tmpdir(), 'cf-test-'));
   const child = spawn(process.execPath, [join(ROOT, 'server.js')], {
-    env: { ...process.env, CF_PORT: String(port), CF_DATA: join(dir, 'data.json'), ...env },
+    env: { ...baseEnv(), CF_PORT: String(port), CF_DATA: join(dir, 'data.json'), ...env },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   let log = '';
