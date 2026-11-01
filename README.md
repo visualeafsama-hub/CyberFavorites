@@ -92,7 +92,13 @@ npm start
    sudo journalctl -u cyber-favorites -n 30
    ```
 
-更新版本：`git pull` 之后 `sudo systemctl restart cyber-favorites`。
+更新版本（数据在 `/var/lib/cyber-favorites`，不受影响）：
+
+```bash
+sudo git -C /srv/cyber-favorites pull --ff-only && sudo systemctl restart cyber-favorites
+```
+
+如果这次更新改了 `deploy/cyber-favorites.service`，还要把它重新复制到 `/etc/systemd/system/`，再运行 `sudo systemctl daemon-reload`。
 
 ### 用 Docker
 
