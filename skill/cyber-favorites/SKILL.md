@@ -22,6 +22,7 @@ description: 操作用户的“赛博收藏夹”（CyberFavorites）：收藏�
 2. 服务器模式的每个请求都要带 `-H "Authorization: Bearer $CF_TOKEN"`。返回 401 说明令牌没设、写错或被撤销了：告诉用户在网页 **设置 → API 令牌** 里生成一个，填进 `CF_TOKEN`。不要尝试别的登录方式。
 3. 本机模式连不上时，告诉用户从开始菜单打开 CyberFavorites，或在项目目录运行 `npm start`。不要自己猜端口。
 4. 写操作的请求体必须是 UTF-8 JSON，带 `-H "Content-Type: application/json"`。**Windows 终端里用 `-d` 直接写中文会被转成 GBK，服务会返回 400**：把 JSON 写进文件，用 `--data-binary @file.json` 发送；或者用 `node -e "fetch(...)"` 发请求。
+5. 例子是 bash 写法。在 PowerShell 里环境变量要写成 `$env:CF_URL`、`$env:CF_TOKEN`，并且要用 `curl.exe`（Windows PowerShell 里的 `curl` 是 `Invoke-WebRequest` 的别名，参数不一样）。
 
 ## 数据结构
 
