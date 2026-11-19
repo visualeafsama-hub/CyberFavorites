@@ -130,7 +130,7 @@ select{height:38px;padding:0 10px;border:1px solid var(--c-line);border-radius:v
 .group.dragging{opacity:.4}
 .drop-empty{grid-column:1/-1;display:grid;place-items:center;min-height:84px;border:1.5px dashed var(--c-accentSoft);
   border-radius:var(--radius);font-size:13.5px;color:var(--c-muted);background:color-mix(in srgb,var(--c-card) 50%,transparent)}
-.card[draggable]{cursor:grab}
+.card[draggable]{cursor:pointer}
 .card.dragging{opacity:.35;border-style:dashed;border-color:var(--c-accent);box-shadow:none}
 .card .grip{color:var(--c-accentSoft);font-size:14px;line-height:1;margin-right:-2px}
 .card:hover .grip{color:var(--c-accent)}
@@ -175,8 +175,15 @@ body.dark .type.image{--t:#ff9cc0} body.dark .type.file{--t:#9cc0ff} body.dark .
 .card h3 a:hover{color:var(--c-accentInk)}
 .card .desc{overflow-wrap:anywhere;margin:0;font-size:14px;line-height:1.7;color:var(--c-muted);
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.card .note{margin:10px 0 0;padding:8px 12px;font-size:13.5px;line-height:1.6;color:var(--c-accentInk);
-  background:var(--c-accentPale);border-left:2px solid var(--c-accent);border-radius:0 4px 4px 0}
+.card .note{margin:10px 0 0;padding:8px 12px 0;border-bottom:8px solid var(--c-accentPale);font-size:13.5px;line-height:1.6;color:var(--c-accentInk);
+  background:var(--c-accentPale);border-left:2px solid var(--c-accent);border-radius:0 4px 4px 0;
+  /* 备注里常有长链接，不断开会撑出卡片；太长的只露 4 行，全文在编辑框里。
+     底部留白用同色边框而不是 padding：overflow 只裁到 padding 外沿，padding 里会露出半行第 5 行 */
+  overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+/* 点卡片空白处就打开链接；按钮、标签、拖动手柄保留自己的行为 */
+.card{cursor:pointer}
+.card[draggable] .grip{cursor:grab}
+.card .chips span,.card .acts button{cursor:pointer}
 .card .gh{display:flex;gap:14px;margin-top:12px;font:12.5px var(--mono);color:var(--c-muted)}
 .card .gh b{color:var(--c-ink);font-weight:600}
 .card .gh .arch{color:var(--c-danger)}

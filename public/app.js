@@ -639,6 +639,26 @@ document.addEventListener('click', async (e) => {
   if (lay) return patchTheme({ layout: lay.dataset.layout });
   const pre = e.target.closest('[data-preset]');
   if (pre) return patchTheme({ preset: pre.dataset.preset });
+  openCard(e);
+});
+
+// 点卡片空白处：链接在新标签页打开，图片、文件、文字打开查看框。
+// 按钮、标签、标题链接已经在上面处理；选中了文字（想复制）时不跳转。
+function openCard(e) {
+  const c = e.target.closest('.card');
+  if (!c || e.target.closest('a,button,input,[data-tag],.grip') || getSelection().toString()) return;
+  const it = state.items.find((x) => x.id === c.dataset.id);
+  if (!it) return;
+  if (LINK_TYPES.includes(it.type) && safeUrl(it.url)) window.open(it.url, '_blank', 'noopener,noreferrer');
+  else openViewer(it.id);
+}
+// 中键点卡片，和中键点链接一样在后台标签页打开
+document.addEventListener('auxclick', (e) => {
+  if (e.button !== 1) return;
+  const c = e.target.closest('.card');
+  if (!c || e.target.closest('a,button')) return;
+  const it = state.items.find((x) => x.id === c.dataset.id);
+  if (it && LINK_TYPES.includes(it.type) && safeUrl(it.url)) { e.preventDefault(); window.open(it.url, '_blank', 'noopener,noreferrer'); }
 });
 
 let qTimer;
